@@ -30,6 +30,7 @@ with open(message_dir) as json_data:
                 content = msg['content']
                 strip_punct = remove_punctuation(content)
                 for word in strip_punct.split():
+                    word = word.lower()
                     if word in dictionary:
                         dictionary[word] += 1
                     else:
