@@ -9,11 +9,11 @@ from pprint import pprint
 import plotly.offline as offline
 import plotly.graph_objs as go
 
-message_dir = 'C:\\Users\\David Lee\\projects\\facebook-leetdavid\\messages\\PeytonZhang_b19cce929a\\message.json'
+message_dir = 'C:\\Users\\David\\Developer\\facebook-message-analytics\\facebook-leetdavid\\messages\\PeytonZhang_b19cce929a\\message.json'
 
 #Punctuation Remover
 tbl = dict.fromkeys(i for i in range(sys.maxunicode)
-                      if unicodedata.category(chr(i)).startswith('P'))
+    if unicodedata.category(chr(i)).startswith('P'))
 def remove_punctuation(text):
     return text.translate(tbl)
 
