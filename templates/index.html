@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="templates/stylesheet.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <meta charset="utf-8"/>
+    <title>Messenger Stats</title>
+</head>
+<body>
+<div class="container">
+	<br><br>
+	<div class="well">
+	    <div class="row">
+	  		<div class="col-sm-4 stats"><big>{{ "{:,}".format(totalSent) }}</big><br>Messages Sent</div>
+	  		<div class="col-sm-4 stats"><big>{{ "{:,}".format(totalRecieved) }}</big><br>Messages Recieved</div>
+	  		<div class="col-sm-4 stats"><big>{{"{:,}".format(totalSent + totalRecieved)}}</big><br>Messages Total</div>
+		</div>
+	</div>
+	<div class="well">
+	    <div class="row">
+	  		<div class="col-sm-6 stats"><big>{{ "{:,}".format(conversationCount) }}</big><br>Conversations</div>
+	  		<div class="col-sm-6 stats"><big>{{ "{:,}".format(groupChatCount) }}</big><br>Group Chats</div>
+		</div>
+	</div>
+	<label class="switch">
+			  <input type="checkbox" onclick="toggle()">
+			   Filter Group Chats
+			</label>
+	<div class="well" id='wgc'>
+		<iframe src="graphs/wgc.html"></iframe>
+	</div>
+	<div class="well" id='ngc'>
+		<iframe src="graphs/ngc.html"></iframe>
+	</div>
+</div>
+
+<script>
+	$(window).bind("load", function() {
+	    $("#ngc").hide();
+	});
+	function toggle(){
+		$("#ngc").toggle();
+		$("#wgc").toggle();
+	}
+</script>
+
+
+</body>
+</html>
