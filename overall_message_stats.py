@@ -51,6 +51,8 @@ def graph(rootdir, filename, filterGroupChats):
 		}  
 	)
 	fig = go.Figure(data=data, layout=layout)
+	if not os.path.exists('graphs/'):
+		os.makedirs('graphs/')
 	offline.plot(fig, filename='graphs/' +filename + '.html', auto_open=False, config=config)
 
 
