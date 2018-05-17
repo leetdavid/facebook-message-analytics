@@ -36,7 +36,7 @@ def graph(rootdir, filename, filterGroupChats):
     	margin=go.Margin(
 	        l=50,
 	        r=50,
-	        b=200,
+	        b=50,
 	        t=50,
 	    ),
 		barmode='stack', 
@@ -48,7 +48,15 @@ def graph(rootdir, filename, filterGroupChats):
 		    "range": [-0.5, 20.5], 
 		    "rangeslider": { "autorange": True, "visible": True }, 
 		    "type": "category"
-		}  
+		},  
+		yaxis={
+        'title':'Message Count',
+        'titlefont':{
+            'family':'Courier New, monospace',
+            'size':18,
+            'color':'#7f7f7f'
+    	    }
+   		}
 	)
 	fig = go.Figure(data=data, layout=layout)
 	offline.plot(fig, filename='graphs/' +filename + '.html', auto_open=False, config=config)
