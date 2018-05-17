@@ -1,4 +1,5 @@
 import overall_message_stats as overall
+import word_analysis as word_analysis
 import generate_html as gen
 import sys
 import math 
@@ -19,20 +20,19 @@ def printProgress(percent):
 root = sys.argv[1]
 
 #Create graphs
-printProgress(0)
 overall.graph(root, 'wgc', False)
-printProgress(25)
 overall.graph(root, 'ngc', True)
-printProgress(50)
 
 #Get message count and conversation count
 people, messageCount, messageCountYou, messageCountOther = overall.getMessageCounts(root, False, 20)
-printProgress(75)
 convoCount, groupChatCount = overall.getConversationCounts(root)
 
+chatMap = word_analysis.graphAllChats(root)	
+
 #Write to html
-gen.create_index_html(sum(messageCountYou), sum(messageCountOther), convoCount, groupChatCount)
-printProgress(100)
+gen.create_index_html(sum(messageCountYou), sum(messageCountOther), convoCount, groupChatCount, chatMap)
+
+
 
 
 

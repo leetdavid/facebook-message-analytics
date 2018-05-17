@@ -1,6 +1,6 @@
 import json
-from pprint import pprint
 import os
+from pprint import pprint
 import plotly.offline as offline
 import plotly.graph_objs as go
 
@@ -72,32 +72,31 @@ def getMessageCounts(rootdir, filterGroupChats, filterNumber):
 	messageCount = []
 	messageCountYou = []
 	messageCountOther = []
+	filepaths = get_immediate_subdirectories(rootdir + '/messages')			
 
-	#Read from files
-	for subdir, dirs, files in os.walk(rootdir + '/messages'):
-		for file in files:
-			if file == 'message.json':
-				filepath = os.path.join(subdir, file)
-				with open(filepath) as json_data:
-					data = json.load(json_data)
-					json_data.close()
-
-					if 'messages' in data and 'title' in data and 'participants' in data:
-						if not(filterGroupChats and len(data['participants']) > 1):
-							personName = data['title']
-							if len(personName) > 15:
-								personName = personName[:13] + '..'
-							you = 0
-							other = 0
-							for message in data['messages']:
-								if 'sender_name' in message and message['sender_name'] == me:
-									you+=1
-								else:
-									other+=1
-							people.append(personName)
-							messageCount.append(len(data['messages']))
-							messageCountYou.append(you)
-							messageCountOther.append(other)
+	for i, chatName in enumerate(filepaths):
+		message_dir = rootdir + '/messages/' + chatName + '/message.json'
+		if os.path.exists(message_dir):
+			print('[{:15s}] ({:3d}/{:3d}) {:s}'.format('Analysing Chat', i, len(filepaths), chatName), end='\r', flush=True)
+			with open(message_dir) as json_data:
+				data = json.load(json_data)
+				json_data.close()
+				if 'messages' in data and 'title' in data and 'participants' in data:
+					if not(filterGroupChats and len(data['participants']) > 1):
+						personName = data['title']
+						if len(personName) > 15:
+							personName = personName[:13] + '..'
+						you = 0
+						other = 0
+						for message in data['messages']:
+							if 'sender_name' in message and message['sender_name'] == me:
+								you+=1
+							else:
+								other+=1
+						people.append(personName)
+						messageCount.append(len(data['messages']))
+						messageCountYou.append(you)
+						messageCountOther.append(other)							
 
 	#Sort
 	messageCount, messageCountOther, messageCountYou, people = zip(*sorted(zip(messageCount, messageCountOther, messageCountYou, people), reverse=True))
@@ -105,7 +104,7 @@ def getMessageCounts(rootdir, filterGroupChats, filterNumber):
 	messageCount = list(messageCount)
 	messageCountYou = list(messageCountYou)
 	messageCountOther = list(messageCountOther)
-
+	print()
 	return people, messageCount, messageCountYou, messageCountOther
 
 ###############################################################################
@@ -127,5 +126,12 @@ def getConversationCounts(rootdir):
 							groupChatCount += 1
 						else:
 							convoCount += 1
-	return convoCount, groupChatCount				
+	return convoCount, groupChatCount		
+
+###############################################################################
+# Get all subdirectories
+def get_immediate_subdirectories(a_dir):
+    return [name for name in os.listdir(a_dir)
+            if os.path.isdir(os.path.join(a_dir, name))]
+
 
