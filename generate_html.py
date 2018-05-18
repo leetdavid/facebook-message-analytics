@@ -12,14 +12,14 @@ def render_template(template_filename, context):
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
-def create_index_html(totalSent, totalRecieved, conversationCount, groupChatCount, chatMap):
+def create_index_html(chat_data, metadata):
     fname = "output.html"
     context = {
-        'totalSent': totalSent,
-        'totalRecieved': totalRecieved,
-        'conversationCount': conversationCount,
-        'groupChatCount': groupChatCount,
-        'chatMap': chatMap
+        'totalSent': metadata['message_total_you'],
+        'totalRecieved': metadata['message_total_other'],
+        'conversationCount': metadata['individual_chat_count'],
+        'groupChatCount': metadata['group_chat_count'],
+        'chatMap': chat_data
     }
     with open(fname, 'w') as f:
         html = render_template('index.html', context)

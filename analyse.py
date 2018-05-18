@@ -1,37 +1,24 @@
-import overall_message_stats as overall
-import word_analysis as word_analysis
-import generate_html as gen
+import message_analysis
+import graphing
+import generate_html
 import sys
 import math 
 
 ###############################################################################
 # python analyse.py /Users/harrytbp/Desktop/facebook-harrybp
 
-def printProgress(percent):
-	percent = int(math.ceil(percent / 10.0))
-	for x in range(0, 10):
-		if x <= percent:
-			print('#', end="", flush=True)
-		else:
-			print('.', end="", flush=True)
-	print(' %s percent' % (str(percent * 10)), end="\r")		
-
- 
 root = sys.argv[1]
-
-#Create graphs
-overall.graph(root, 'wgc', False)
-overall.graph(root, 'ngc', True)
-
-#Get message count and conversation count
-people, messageCount, messageCountYou, messageCountOther = overall.getMessageCounts(root, False, 20)
-convoCount, groupChatCount = overall.getConversationCounts(root)
-
-chatMap = word_analysis.graphAllChats(root)	
-
-#Write to html
-gen.create_index_html(sum(messageCountYou), sum(messageCountOther), convoCount, groupChatCount, chatMap)
-
+if not os.path.exists('graphs/'):
+	os.makedirs('graphs/')
+if not os.path.exists('graphs/individual-word-freq'):
+	os.makedirs('graphs/individual-word-freq')
+chat_data, metadata = message_analysis.analyse(root)
+graphing.graph_overall_message_count(chat_data, False, 'with_group_chats')
+graphing.graph_overall_message_count(chat_data, True, 'without_group_chats')
+for i, chat in enumerate(chat_data):
+	graphing.graph_word_frequency(chat['most_frequent_words'], chat['folder_name'])
+	print('[{:15s}] ({:3d}/{:3d}) {:s}'.format('Graphing Chat', i, len(chat_data), chat['name'].ljust(40)), end='\r', flush=True)
+generate_html.create_index_html(chat_data, metadata)
 
 
 
