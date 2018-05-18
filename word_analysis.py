@@ -12,7 +12,7 @@ import plotly.graph_objs as go
 tbl = dict.fromkeys(i for i in range(sys.maxunicode)
     if unicodedata.category(chr(i)).startswith('P'))
 def remove_punctuation(text):
-    return text.translate(tbl)
+    return text.replace('ㅋ','').translate(tbl)
 
 ###############################################################################
 # Filters words from a list
