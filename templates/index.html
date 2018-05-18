@@ -33,16 +33,38 @@
 	<div class="well" id='ngc'>
 		<iframe src="graphs/ngc.html"></iframe>
 	</div>
+
+	<div class="form-group">
+		<label for="chatSelect">Select a chat:</label>
+	  <select class="form-control" id="chatSelect">
+	  		<option></option>
+	    {% for key, value in chatMap.items() %}
+		    <option value="{{key}}">{{ value["name"] }}</option> 
+		{% endfor %}
+	  </select>
+		</div>
+
+	<div id="chatGraphWell" class='well'>
+	  	<iframe id='chatGraph'  src=""></iframe>
+	</div>
+	
+	
 </div>
 
 <script>
 	$(window).bind("load", function() {
 	    $("#ngc").hide();
+	    $("#chatGraphWell").hide()
 	});
 	function toggle(){
 		$("#ngc").toggle();
 		$("#wgc").toggle();
 	}
+
+	$('#chatSelect').on('change', function() {
+		$("#chatGraphWell").show()
+  		$("#chatGraph").attr('src', 'graphs/individual-word-freq/'+ this.value + '.html');
+	});
 </script>
 
 
