@@ -21,7 +21,7 @@ def create_index_html(chat_data, metadata):
         'groupChatCount': metadata['group_chat_count'],
         'chatMap': chat_data
     }
-    with open(fname, 'w') as f:
+    with open(fname, 'w', encoding="utf-8") as f:
         html = render_template('index.html', context)
         f.write(html)
 
