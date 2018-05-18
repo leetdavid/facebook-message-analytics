@@ -3,6 +3,7 @@ import graphing
 import generate_html
 import sys
 import math 
+import os
 
 ###############################################################################
 # python analyse.py /Users/harrytbp/Desktop/facebook-harrybp
