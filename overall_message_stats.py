@@ -7,7 +7,7 @@ import plotly.graph_objs as go
 ###############################################################################
 #Returns the name of the person the data belongs to
 def findName(rootdir):
-	with open(rootdir + '/profile_information/profile_information.json') as json_data:
+	with open(rootdir + '/profile_information/profile_information.json', encoding='utf-8') as json_data:
 		data = json.load(json_data)
 		json_data.close()
 		return data['profile']['name']
@@ -78,7 +78,7 @@ def getMessageCounts(rootdir, filterGroupChats, filterNumber):
 		message_dir = rootdir + '/messages/' + chatName + '/message.json'
 		if os.path.exists(message_dir):
 			print('[{:15s}] ({:3d}/{:3d}) {:s}'.format('Analysing Chat', i, len(filepaths), chatName), end='\r', flush=True)
-			with open(message_dir) as json_data:
+			with open(message_dir, encoding="utf-8") as json_data:
 				data = json.load(json_data)
 				json_data.close()
 				if 'messages' in data and 'title' in data and 'participants' in data:
@@ -118,7 +118,7 @@ def getConversationCounts(rootdir):
 		for file in files:
 			if file == 'message.json':
 				filepath = os.path.join(subdir, file)
-				with open(filepath) as json_data:
+				with open(filepath, encoding="utf-8") as json_data:
 					data = json.load(json_data)
 					json_data.close()
 					if 'messages' in data and 'title' in data and 'participants' in data:

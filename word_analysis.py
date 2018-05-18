@@ -31,7 +31,7 @@ def createWordFreqGraph(root, chatName):
 	if os.path.exists(message_dir):
 		dictionary = {}
 		#Read the file
-		with open(message_dir) as json_data:
+		with open(message_dir, encoding='utf-8') as json_data:
 		    data = json.load(json_data)
 		    json_data.close()
 
@@ -95,7 +95,7 @@ def createWordFreqGraph(root, chatName):
 def findName(root,chatName):
 	message_dir = root + '/messages/' + chatName + '/message.json'
 	if os.path.exists(message_dir):
-		with open(message_dir) as json_data:
+		with open(message_dir, encoding='utf-8') as json_data:
 			    data = json.load(json_data)
 			    json_data.close()
 			    if 'title' in data:
