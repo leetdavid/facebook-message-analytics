@@ -110,7 +110,7 @@ def analyse(root):
 			chat_data['folder_name'] = chat
 			if len(chat_data['most_frequent_words']) > 0:
 				all_chat_data.append(chat_data)
-			print('[{:15s}] ({:3d}/{:3d}) {:s}'.format('Analysing Chat', i, len(all_chats), chat_data['name'].ljust(40)), end='\r', flush=True)
+			print('[{:15s}] ({:3d}/{:3d}) {:s}'.format('Analysing Chat', i, len(all_chats), chat_data['name'].ljust(80)), end='\r', flush=True)
 	
 		#if i > 20:
 		#	break	
