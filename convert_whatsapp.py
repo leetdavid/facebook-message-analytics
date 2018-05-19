@@ -1,18 +1,17 @@
 import sys
-import time
-import datetime
 import json
 
 import helper as helper
 
 
-param_title = sys.argv[1].split('WhatsApp Chat with ')[1]
+param_title = sys.argv[1].split('WhatsApp Chat with ')[1].replace('.txt','')
 
 param_input_dir = sys.argv[1]
 
 # Specify 'messages' folder
 param_output_dir = sys.argv[2] + '/' + param_title.replace(' ','')[:-4] + '/message.json'
 
+participants = []
 messages = []
 currentMsg = ''
 acc = ''
@@ -23,9 +22,6 @@ def isTimestamped(str):
 def isConveration(str):
     return isTimestamped(str) and str.find(': ') > 19
 
-def to_UNIX_Time(strtime):
-    return int(time.mktime(datetime.datetime.strptime(strtime, "%m/%d/%y, %I:%M %p").timetuple()))
-
 def convert(line):
     #Find Date
     dateStr = line[:line.find(' - ')]
@@ -33,12 +29,14 @@ def convert(line):
     line = line.replace(':','x', 1)
     nameStr = line[line.find(' - ')+3:line.find(':')]
     m = {}
+    if nameStr not in participants:
+        participants.append(nameStr)
     m['sender_name'] = nameStr
     m['timestamp'] = dateStr
     m['content'] = line[line.find(':')+2:len(line)].replace('\r','').replace('\n','')
 
     #Convert Whatsapp Timestamp to UNIX Time
-    m['timestamp'] = to_UNIX_Time(m['timestamp'])
+    m['timestamp'] = helper.whatsapp_to_unix_timestamp(m['timestamp'])
 
     return m
 
@@ -59,6 +57,10 @@ def convertWhatsappChat():
         d = {}
         d['messages'] = messages
         d['title'] = param_title
+        d['is_still_participant'] = True
+        d['status'] = "Pending"
+        d['thread_type'] = "Regular"
+        d['participants'] = participants
         json.dump(d, fp, indent=4, ensure_ascii=False)#.encode('utf8')
 
 convertWhatsappChat()
