@@ -2,6 +2,7 @@ import os
 import json
 import datetime
 import time
+import calendar
 
 def hasParam(argv, howToUse = None):
     if len(argv) > 1:
@@ -44,5 +45,38 @@ def timestamp_to(timestamp, format):
         'ISO8601':  datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
     }[format]()
 
-def time_convert(input, inputformat, outputformat):
-    pass
+#
+# Converts time data from one format to another. By default, it will return a datetime.
+def converttime(input, format = 'datetime'):
+    #Convert to datetime
+    #is datetime
+    if isinstance(input, datetime.date):
+        dt = input
+
+    #is timestamp (int or str)
+    if isinstance(input, (int, str)):
+        try:
+            dt = datetime.datetime.fromtimestamp(int(input))
+        except ValueError:
+            pass
+        try:
+            dt = datetime.datetime.strptime(input, '%Y-%m-%d %H:%M:%S')
+        except (ValueError, TypeError) as e:
+            pass
+        try:
+            dt = datetime.datetime.strptime(input, '%m/%d/%y, %I:%M %p')
+        except (ValueError, TypeError) as e:
+            pass
+
+    if dt is None:
+        return None
+
+    if type(dt) is not datetime.datetime:
+        raise TypeError('dt must be a datetime.datetime, not a %s' % type(dt))
+
+    if format == 'datetime':
+        return dt
+    elif format == 'timestamp':
+        return calendar.timegm(dt.timetuple())
+    elif format == 'string' or format == 'iso8601' or format == 'ISO8601':
+        return dt.strftime('%Y-%m-%d %H:%M:%S')
