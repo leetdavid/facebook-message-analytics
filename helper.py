@@ -49,6 +49,9 @@ def timestamp_to(timestamp, format):
 # Converts time data from one format to another. By default, it will return a datetime.
 def converttime(input, format = 'datetime'):
     #Convert to datetime
+
+    dt = None
+
     #is datetime
     if isinstance(input, datetime.date):
         dt = input
@@ -61,18 +64,17 @@ def converttime(input, format = 'datetime'):
             pass
         try:
             dt = datetime.datetime.strptime(input, '%Y-%m-%d %H:%M:%S')
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             pass
         try:
             dt = datetime.datetime.strptime(input, '%m/%d/%y, %I:%M %p')
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             pass
 
-    if dt is None:
-        return None
+        raise TypeError('input is not in proper format')
 
-    if type(dt) is not datetime.datetime:
-        raise TypeError('dt must be a datetime.datetime, not a %s' % type(dt))
+    if dt is None:
+        raise TypeError('input must be a datetime.datetime, UNIX timestamp, or ISO8601, not a %s' % type(input))
 
     if format == 'datetime':
         return dt
@@ -80,3 +82,5 @@ def converttime(input, format = 'datetime'):
         return calendar.timegm(dt.timetuple())
     elif format == 'string' or format == 'iso8601' or format == 'ISO8601':
         return dt.strftime('%Y-%m-%d %H:%M:%S')
+
+converttime('adsf"')
