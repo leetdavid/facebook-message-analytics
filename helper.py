@@ -32,55 +32,44 @@ def whatsapp_to_timestamp(wtaptime):
     return int(time.mktime(datetime.datetime.strptime(wtaptime, "%m/%d/%y, %I:%M %p").timetuple()))
 
 ###############################################################################
-# Converts timestamp to date format according to 'format' value
+# Converts one date format to another format according to 'format' value (default: datetime)
 # e.g.
-# timestamp_to(1480610024, 'datetime') -> datetime.datetime(2016, 12, 2, 0, 33, 44)
-# timestamp_to(1480610024, 'iso8601') -> '2016-12-02 00:33:44'
-# timestamp_to(1480610024, 'datetime') -> 
-def timestamp_to(timestamp, format):
-    return {
-        'datetime': datetime.datetime.fromtimestamp(int(timestamp)),
-        'string':  datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S'),
-        'iso8601':  datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S'),
-        'ISO8601':  datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
-    }[format]()
-
-#
-# Converts time data from one format to another. By default, it will return a datetime.
+# converttime(1480610024) -> datetime.datetime(2016, 12, 2, 0, 33, 44)
+# converttime(1480610024, 'iso8601') -> '2016-12-02 00:33:44'
 def converttime(input, format = 'datetime'):
-    #Convert to datetime
-
     dt = None
 
-    #is datetime
+    # datetime
     if isinstance(input, datetime.date):
         dt = input
 
     #is timestamp (int or str)
     if isinstance(input, (int, str)):
-        try:
+        try: #UNIX Time
             dt = datetime.datetime.fromtimestamp(int(input))
         except ValueError:
             pass
-        try:
+        try: #ISO8601
             dt = datetime.datetime.strptime(input, '%Y-%m-%d %H:%M:%S')
         except (ValueError, TypeError):
             pass
-        try:
+        
+        try: #Whatsapp Time
             dt = datetime.datetime.strptime(input, '%m/%d/%y, %I:%M %p')
         except (ValueError, TypeError):
             pass
+        
 
         raise TypeError('input is not in proper format')
 
     if dt is None:
         raise TypeError('input must be a datetime.datetime, UNIX timestamp, or ISO8601, not a %s' % type(input))
 
-    if format == 'datetime':
-        return dt
-    elif format == 'timestamp':
-        return calendar.timegm(dt.timetuple())
-    elif format == 'string' or format == 'iso8601' or format == 'ISO8601':
-        return dt.strftime('%Y-%m-%d %H:%M:%S')
+    fc = format.lower().replace('-','') #Format Code
 
-converttime('adsf"')
+    if fc == 'datetime':
+        return dt
+    elif fc == 'timestamp' or fc == 'unix':
+        return calendar.timegm(dt.timetuple())
+    elif fc == 'string' or fc == 'iso8601':
+        return dt.strftime('%Y-%m-%d %H:%M:%S')

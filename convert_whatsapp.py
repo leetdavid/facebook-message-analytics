@@ -36,7 +36,7 @@ def convert(line):
     m['content'] = line[line.find(':')+2:len(line)].replace('\r','').replace('\n','')
 
     #Convert Whatsapp Timestamp to UNIX Time
-    m['timestamp'] = helper.whatsapp_to_unix_timestamp(m['timestamp'])
+    m['timestamp'] = helper.converttime(m['timestamp'],'timestamp')
 
     return m
 
