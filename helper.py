@@ -3,6 +3,7 @@ import json
 import datetime
 import time
 import calendar
+import errno
 
 def hasParam(argv, howToUse = None):
     if len(argv) > 1:
@@ -12,6 +13,8 @@ def hasParam(argv, howToUse = None):
             print(howToUse)
         return False
 
+###############################################################################
+# Creates directories to the filepath if they do not exist.
 def createDirectories(filepath):
     if not os.path.exists(os.path.dirname(filepath)):
         try:
@@ -28,9 +31,6 @@ def findName(rootdir):
 		json_data.close()
 		return data['profile']['name']
 
-def whatsapp_to_timestamp(wtaptime):
-    return int(time.mktime(datetime.datetime.strptime(wtaptime, "%m/%d/%y, %I:%M %p").timetuple()))
-
 ###############################################################################
 # Converts one date format to another format according to 'format' value (default: datetime)
 # e.g.
@@ -42,9 +42,7 @@ def converttime(input, format = 'datetime'):
     # datetime
     if isinstance(input, datetime.date):
         dt = input
-
-    #is timestamp (int or str)
-    if isinstance(input, (int, str)):
+    elif isinstance(input, (int, str)): #is timestamp (int or str)
         try: #UNIX Time
             dt = datetime.datetime.fromtimestamp(int(input))
         except ValueError:
@@ -53,13 +51,10 @@ def converttime(input, format = 'datetime'):
             dt = datetime.datetime.strptime(input, '%Y-%m-%d %H:%M:%S')
         except (ValueError, TypeError):
             pass
-        
         try: #Whatsapp Time
             dt = datetime.datetime.strptime(input, '%m/%d/%y, %I:%M %p')
         except (ValueError, TypeError):
             pass
-        
-
         raise TypeError('input is not in proper format')
 
     if dt is None:
@@ -73,3 +68,5 @@ def converttime(input, format = 'datetime'):
         return calendar.timegm(dt.timetuple())
     elif fc == 'string' or fc == 'iso8601':
         return dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        
